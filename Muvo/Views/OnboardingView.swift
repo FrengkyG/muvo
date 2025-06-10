@@ -26,7 +26,7 @@ struct OnboardingView: View {
                 // TODO: Change Rectangle to Image after HiFi Ready
                 Rectangle()
                     .fill(Color(.systemGray3))
-                    .frame(width: 200, height: 200)
+                    .frame(width: 286, height: 286)
                 
                 Spacer()
                 
@@ -38,30 +38,39 @@ struct OnboardingView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         Group {
-                            Text("Latihan ")
-                                .font(.title).bold()
-                                .foregroundColor(.white) +
-                            Text("Pronunciation")
-                                .font(.title).italic().bold()
-                                .foregroundColor(.white) +
-                            Text("\nUntuk Liburanmu")
-                                .font(.title).bold()
-                                .foregroundColor(.white)
+                            (
+                                Text("Latihan ")
+                                    .font(.custom("ApercuPro-Bold", size: 32))
+                                    .foregroundColor(.white)
+                                +
+                                Text("Pronunciation")
+                                    .font(.custom("ApercuPro-BoldItalic",size: 32))
+                                    .foregroundColor(.white)
+                                
+                                +
+                                Text("\nUntuk Liburanmu")
+                                    .font(.custom("ApercuPro-Bold", size: 32)).bold()
+                                    .foregroundColor(.white)
+                            )
                         }
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                         
                         Text("Asah pronunciation lewat latihan seru. Teman liburan yang bikin skill makin jago!")
                             .foregroundColor(.white)
-                            .font(.body)
+                            .font(.custom("ApercuPro", size: 20))
                             .padding(.top, 4)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
                         
                         Spacer()
-                    
+                        
                         ZStack {
                             HStack(spacing: 8) {
                                 Circle().fill(Color.white.opacity(0.5)).frame(width: 10, height: 10)
                                 Circle().fill(Color.white).frame(width: 10, height: 10)
                             }
-
+                            
                             HStack {
                                 Spacer()
                                 Button {
@@ -81,6 +90,14 @@ struct OnboardingView: View {
                     .padding(24)
                 }
                 .frame(height: 300)
+                .onAppear() {
+                    for family in UIFont.familyNames {
+                        print("Family: \(family)")
+                        for name in UIFont.fontNames(forFamilyName: family) {
+                            print("  Font: \(name)")
+                        }
+                    }
+                }
             }
         }
     }

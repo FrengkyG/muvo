@@ -11,10 +11,12 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		57588A122DF7DF0D00F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */ = {
+		57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets.xcassets,
 				Info.plist,
+				"Preview Content/Preview Assets.xcassets",
 			);
 			target = 575889862DF7C5E200F7D2BE /* Muvo */;
 		};
@@ -24,7 +26,7 @@
 		575889892DF7C5E200F7D2BE /* Muvo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				57588A122DF7DF0D00F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */,
+				57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */,
 			);
 			path = Muvo;
 			sourceTree = "<group>";

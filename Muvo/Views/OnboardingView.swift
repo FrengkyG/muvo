@@ -15,8 +15,13 @@ struct OnboardingView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button("Skip") {
+                    Button(action: {
                         // TODO: Action Skip (maybe use UserDefaults)
+                    }) {
+                        Text("Skip")
+                            .font(.custom("Apercu-Bold", size: 16))
+                            .foregroundColor(.disabledText)
+                            .underline()
                     }
                     .padding(.trailing, 30)
                 }

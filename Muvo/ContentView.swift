@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var viewModel = OnboardingViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if viewModel.isOnboardingCompleted {
+            HomeView()
+        } else {
+            OnboardingView()
         }
-        .padding()
     }
 }
 

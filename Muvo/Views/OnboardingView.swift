@@ -11,6 +11,8 @@ struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
     @State private var navigateToHome = false
     
+    @State private var showExample = false
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -84,7 +86,8 @@ struct OnboardingView: View {
                                         HStack {
                                             Spacer()
                                             Button {
-                                                // TODO: Add Action
+                                                // TODO: Just an example, implement true action
+                                                showExample = true
                                             } label: {
                                                 Image(systemName: "chevron.right")
                                                     .font(.system(size: 24, weight: .bold))
@@ -93,6 +96,9 @@ struct OnboardingView: View {
                                                     .background(Color.white)
                                                     .clipShape(Circle())
                                                     .shadow(radius: 4)
+                                            }
+                                            .sheet(isPresented: $showExample) {
+                                                ExampleView()
                                             }
                                         }
                                     }

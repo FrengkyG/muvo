@@ -8,6 +8,7 @@ import SwiftUI
 
 extension Color {
     static let disabledText = Color(hex: "#797877")
+    static let primColor = Color(hex: "#0B6FF9")
 }
 
 extension Color {

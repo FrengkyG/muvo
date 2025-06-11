@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct MuvoApp: App {
+    @AppStorage("isFirstTimeLaunch") var isFirstTimeLaunch: Bool = true
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(Container.create(shouldCreateDefaults: &isFirstTimeLaunch))
     }
 }

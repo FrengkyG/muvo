@@ -1,0 +1,402 @@
+[
+  {
+    "categoryId": "HT",
+    "question": "I have a reservation under my name."
+  },
+  {
+    "categoryId": "HT",
+    "question": "I'd like to check in please."
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is breakfast included?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "There is a problem with my room."
+  },
+  {
+    "categoryId": "HT",
+    "question": "I need a non smoking room please."
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I have an extra bed?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "I’d like to make a reservation."
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you have any rooms available for tonight?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "I’d like to cancel my reservation."
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I check in early?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "What time is check-out?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I have a late check-out?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a charge for late check-out?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I see the room first?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I upgrade my room?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I get a receipt for my stay?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Does the room have a safe?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a fridge in the room?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I have some extra pillows?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you have a hairdryer?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a kettle in the room?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you offer daily housekeeping?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I have a wake-up call?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I store my luggage after check-out?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a laundry service?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is the tap water safe to drink?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you have a restaurant?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is room service available?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "What time does the restaurant open?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is lunch or dinner included?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you offer vegetarian meals?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a minibar in the room?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I order food to my room?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you serve alcohol?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I bring outside food?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a gym or fitness center?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you have a swimming pool?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a spa in the hotel?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you offer airport shuttle service?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I rent a car through the hotel?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you have a business center?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there a concierge desk?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Is there free parking available?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "Do you provide towels for the pool?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "I lost my room key."
+  },
+  {
+    "categoryId": "HT",
+    "question": "I think someone is in my room."
+  },
+  {
+    "categoryId": "HT",
+    "question": "There’s a leak in the bathroom."
+  },
+  {
+    "categoryId": "HT",
+    "question": "There’s no electricity in my room."
+  },
+  {
+    "categoryId": "HT",
+    "question": "Can I speak to the manager?"
+  },
+  {
+    "categoryId": "HT",
+    "question": "I’d like to file a complaint."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the check-in counter?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "What is the gate number?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "My luggage is missing."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I get a taxi here?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the immigration counter?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "I think I’m lost. Can you show me on the map?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Which terminal is for international flights?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "I lost my boarding pass."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is my flight on time?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "How many bags can I check in?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I get a window seat?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I change my seat?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is the flight delayed?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Why is the flight delayed?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Has boarding started?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the security check?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I take this on the plane?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the duty-free shop?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I use this currency here?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "I missed my flight."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I rebook my flight?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the transfer desk?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Do I need a visa to transit?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "How do I get to the domestic terminal?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is this a direct flight?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I speak to a supervisor?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where can I charge my phone?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is there free Wi-Fi here?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I get a printed boarding pass?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I bring food through security?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is lost and found?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "My passport is missing."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Here is my passport and ticket."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Do I go left or right after security?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the information desk?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is there a lounge I can use?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "How do I get to the boarding gate?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is there a shuttle between terminals?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where can I smoke?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I bring this bag as a carry-on?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "How heavy can my hand luggage be?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Do I need to fill out any forms?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where is the customs area?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Do I need to declare anything?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "This is my connecting flight."
+  },
+  {
+    "categoryId": "AP",
+    "question": "Can I get help with my bags?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where can I buy a SIM card?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Is there a restroom nearby?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Where can I find a trolley?"
+  },
+  {
+    "categoryId": "AP",
+    "question": "Are there foods onboard?"
+  }
+]

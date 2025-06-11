@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var context
     @StateObject private var viewModel = OnboardingViewModel()
     
     var body: some View {

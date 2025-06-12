@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject var userViewModel = UserViewModel()
+
     var body: some View {
         VStack {
-            Text("Hello, World!")
+            Text("Hello, \(userViewModel.username)")
         }
     }
 }

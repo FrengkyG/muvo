@@ -41,6 +41,7 @@ actor Container {
                         return
                     }
                     let questionObject = Question(
+                        id: q.id,
                         question: q.question,
                         category: category
                     )

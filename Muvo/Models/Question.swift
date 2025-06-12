@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 class Question: Identifiable {
-    @Attribute(.unique) var id: String = UUID().uuidString
+    @Attribute(.unique) var id: String
     var question: String
     var done: Bool
     @Relationship var category: Category?
 
-    init(id:String = UUID().uuidString, question: String, category: Category? = nil) {
+    init(id:String, question: String, category: Category? = nil) {
         self.id = id
         self.question = question
         self.done = false

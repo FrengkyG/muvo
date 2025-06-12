@@ -13,6 +13,7 @@ struct CategoryJSON: Decodable {
 }
 
 struct QuestionJSON: Decodable {
+    let id: String
     let question: String
     let categoryId: String
 }

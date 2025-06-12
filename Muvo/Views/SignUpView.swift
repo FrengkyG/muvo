@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var onboardingViewModel = OnboardingViewModel()
     @State private var username: String = ""
     
     var body: some View {
@@ -17,7 +19,7 @@ struct SignUpView: View {
                     NavigationToolbar()
                     
                     ZStack(alignment: .top) {
-                        SignUpCardSection(username: $username, geometry: geometry)
+                        SignUpCardSection(username: $username, geometry: geometry, userViewModel: userViewModel, OnboardingViewModel: onboardingViewModel)
                             .frame(maxHeight: .infinity, alignment: .bottom)
                         
                         
@@ -73,6 +75,8 @@ struct NavigationToolbar: View {
 struct SignUpCardSection: View {
     @Binding var username: String
     let geometry: GeometryProxy
+    @ObservedObject var userViewModel: UserViewModel
+    @ObservedObject var OnboardingViewModel: OnboardingViewModel
     @State private var navigateToHome = false
     
     var body: some View {
@@ -120,6 +124,8 @@ struct SignUpCardSection: View {
                 
                 Button(action: {
                     navigateToHome = true
+                    userViewModel.saveUsername(username)
+                    OnboardingViewModel.markOnboardingAsCompleted()
                 }) {
                     Text("Lanjutkan")
                         .font(.custom("ApercuPro-Bold", size: 18))

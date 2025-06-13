@@ -16,29 +16,15 @@ struct HomeView: View {
     @Query var questions: [Question]
     
     var body: some View {
-        NavigationView{
-            VStack(spacing: 24) {
-                HStack {
-                    Text("Hello, \(userViewModel.username)")
-                    Spacer()
-                }
-                
-                // Card
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(categories) { category in
-                        NavigationLink(destination: WordCheckView()) {
-                            progressCard(category: category)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Divider()
-                
+        ZStack {
+            VStack {
+                HeaderView(userViewModel: userViewModel)
                 Spacer()
+                CardBannerView()
+                Spacer()
+
             }
-            .padding()
+            .padding(.horizontal, 24)
         }
     }
     
@@ -59,5 +45,34 @@ struct HomeView: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
+}
+
+struct HeaderView: View {
+    @ObservedObject var userViewModel: UserViewModel
+    
+    var body: some View {
+        HStack {
+            Rectangle()
+                .frame(width: 21, height: 21, alignment: .center)
+                .foregroundColor(.gray)
+            VStack(alignment: .leading) {
+                Text("Selamat Pagi 👋🏻")
+                    .font(.custom("ApercuPro", size: 14))
+                Text(userViewModel.username)
+                    .font(.custom("ApercuPro-Medium", size: 20))
+            }
+            Spacer()
+            Rectangle()
+                .frame(width: 36, height: 36, alignment: .center)
+                .foregroundColor(.gray)
+        }
+    }
+}
+
+struct CardBannerView: View {
+    var body: some View {
+        Rectangle()
+            .frame(width: .infinity, height: 110, alignment: .center)
+            .foregroundColor(.gray)    }
 }

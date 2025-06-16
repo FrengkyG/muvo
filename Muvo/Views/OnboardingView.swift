@@ -11,8 +11,6 @@ struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
     @State private var navigateToHome = false
     
-    @State private var showExample = false
-    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -121,8 +119,6 @@ struct BottomBlueCardSection: View {
                     HStack {
                         Spacer()
                         Button {
-                            // TODO: Just an example, implement true action
-                            // showExample = true
                             navigateToSignup = true
                         } label: {
                             Image(systemName: "chevron.right")
@@ -133,9 +129,6 @@ struct BottomBlueCardSection: View {
                                 .clipShape(Circle())
                                 .shadow(radius: 4)
                         }
-                        //                        .sheet(isPresented: $showExample) {
-                        //                            ExampleView()
-                        //                        }
                         .navigationDestination(isPresented: $navigateToSignup) {
                             SignUpView()
                         }

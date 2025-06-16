@@ -5,11 +5,11 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Apercu-Regular.otf</string>
-        <string>Apercu-Regular-Italic.otf</string>
-        <string>Apercu-Bold.otf</string>
-        <string>Apercu-Bold-Italic.otf</string>
-        <string>Apercu-Medium.otf</string>
-        <string>Apercu-Medium-Italic.otf</string>
+		<string>Apercu-Regular-Italic.otf</string>
+		<string>Apercu-Bold.otf</string>
+		<string>Apercu-Bold-Italic.otf</string>
+		<string>Apercu-Medium.otf</string>
+		<string>Apercu-Medium-Italic.otf</string>
 	</array>
 </dict>
 </plist>

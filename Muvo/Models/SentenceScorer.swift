@@ -5,39 +5,43 @@
     //  Created by Rieno on 16/06/25.
     //
 
-    import SwiftUI
+import SwiftUI
+import AVFoundation
+import Speech
+import CoreML
+import SoundAnalysis
+import Accelerate
 
-    // MARK: - Model
-    // These are the data structures for the app. They don't contain any logic.
+enum RecognitionState {
+    case idle, recording, processing, result
+}
 
-    struct PracticeSentence: Identifiable {
-        let id = UUID()
-        let english: String
-        let indonesian: String
-    }
+enum PracticeCategory: String {
+    case hotel = "Hotel"
+    case airport = "Airport"
+}
 
-    enum RecognitionState {
-        case idle
-        case recording
-        case processing
-        case result
-    }
+enum PronunciationAccuracy {
+    case perfect, almost, tryAgain
+}
 
-    struct PronunciationResult {
-        let score: Int
-        let feedback: String
-        let isCorrect: Bool
-        let recognizedText: String
-    }
+enum SpeechRecognitionResult {
+    case success(String)
+    case noSpeech
+    case error(String)
+}
 
-    enum SpeechRecognitionResult {
-        case success(String)
-        case noSpeech
-        case error(String)
-    }
+struct PracticeSentence {
+    let english: String
+    let indonesian: String
+    let category: PracticeCategory
+    let modelName: String
+}
 
-    enum PronunciationScoringResult {
-        case result(PronunciationResult)
-        case speechResult(SpeechRecognitionResult)
-        case error(String)
-    }
+// THIS IS THE MODIFIED STRUCT
+struct PronunciationResult {
+    let accuracy: PronunciationAccuracy
+    let recognizedText: String
+    let score: Int // Optional score
+}
+

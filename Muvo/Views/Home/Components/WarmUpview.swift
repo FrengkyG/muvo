@@ -11,7 +11,12 @@ struct WarmUpview: View {
     
     var body: some View {
         HStack{
-            Spacer()
+            Image("imgBubbleChat")
+                .resizable()
+                .scaledToFit()
+                .scaleEffect(1.1)
+                .offset(y: -60)
+            
             VStack (alignment: .leading) {
                 Text("Belajar")
                     .font(.custom("ApercuPro", size: 14))

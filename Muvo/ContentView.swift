@@ -14,9 +14,9 @@ struct ContentView: View {
     
     var body: some View {
         if viewModel.isOnboardingCompleted {
-            HomeView()
+            SentencePracticeView()
         } else {
-            OnboardingView()
+            SentencePracticeView()
         }
     }
 }

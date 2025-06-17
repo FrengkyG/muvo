@@ -11,11 +11,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */ = {
+		66F4E2992E00288500E9C484 /* Exceptions for "Muvo" folder in "Muvo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				"Preview Content/Preview Assets.xcassets",
 			);
 			target = 575889862DF7C5E200F7D2BE /* Muvo */;
 		};
@@ -25,7 +24,7 @@
 		575889892DF7C5E200F7D2BE /* Muvo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */,
+				66F4E2992E00288500E9C484 /* Exceptions for "Muvo" folder in "Muvo" target */,
 			);
 			path = Muvo;
 			sourceTree = "<group>";
@@ -266,16 +265,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Muvo/Preview Content\"";
-				DEVELOPMENT_TEAM = A97HFMR9C5;
+				DEVELOPMENT_TEAM = 6TQSZH3N3Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Muvo/Info.plist;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Kami memerlukan akses mikrofon untuk merekam suara Anda";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Kami memerlukan akses pengenalan suara untuk mentranskripsi ucapan Anda";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -299,16 +296,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Muvo/Preview Content\"";
-				DEVELOPMENT_TEAM = A97HFMR9C5;
+				DEVELOPMENT_TEAM = 6TQSZH3N3Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Muvo/Info.plist;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Kami memerlukan akses mikrofon untuk merekam suara Anda";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Kami memerlukan akses pengenalan suara untuk mentranskripsi ucapan Anda";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

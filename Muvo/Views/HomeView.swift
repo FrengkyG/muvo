@@ -71,16 +71,39 @@ struct HomeView: View {
 
 struct HeaderView: View {
     @ObservedObject var userViewModel: UserViewModel
+    private var isDaytime: Bool {
+        let hour = Calendar.current.component(.hour, from: Date())
+        return hour >= 6 && hour < 18
+    }
+    
     
     var body: some View {
         HStack {
-            // TODO: Change to sun/moon image with logic 6AM, 6PM
-            Rectangle()
-                .frame(width: 21, height: 21, alignment: .center)
-                .foregroundColor(.gray)
+            Group {
+                if isDaytime {
+                    Image(systemName: "sun.min.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 22, height: 22)
+                        .foregroundColor(.yellow)
+                } else {
+                    Image(systemName: "moon.stars.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 22, height: 22)
+                        .foregroundColor(.primColor)
+                }
+            }
+            
+            
             VStack(alignment: .leading) {
-                Text("Selamat Pagi 👋🏻")
-                    .font(.custom("ApercuPro", size: 14))
+                if isDaytime {
+                    Text("Selamat Pagi 👋🏻")
+                        .font(.custom("ApercuPro", size: 14))
+                } else {
+                    Text("Selamat Malam 👋🏻")
+                        .font(.custom("ApercuPro", size: 14))
+                }
                 Text(userViewModel.username)
                     .font(.custom("ApercuPro-Medium", size: 20))
             }
@@ -98,55 +121,55 @@ struct CardBannerView: View {
     
     
     var body: some View {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text ("Progress Belajar")
-                        .font(.custom("ApercuPro-Bold", size: 20))
-                    Spacer()
-                }.padding(.bottom, 2)
-                
-                Text("Kamu berhasil mempelajari ")
-                    .font(.custom("ApercuPro", size: 14))
-
-                + Text("5")
-                    .font(.custom("ApercuPro-Bold", size: 14))
-                    .foregroundColor(.primColor)
-                
-                + Text(" kalimat")
-                    .font(.custom("ApercuPro", size: 14))
-
-                
-                HStack {
-                    ZStack(alignment: .leading) {
-                        GeometryReader { geometry in
-                            RoundedRectangle(cornerRadius: 18)
-                                .fill(Color.grayProgressColor ?? Color.gray.opacity(0.3))
-                                .frame(height: 16)
-                            
-                            Rectangle()
-                                .fill(Color.greenProgressColor ?? Color.green)
-                                .frame(width: geometry.size.width * progress, height: 16)
-                                .cornerRadius(progress == 1 ? 20 : 10)
-                                .animation(.easeInOut(duration: 0.3), value: progress)
-                        }
+        VStack(alignment: .leading) {
+            HStack {
+                Text ("Progress Belajar")
+                    .font(.custom("ApercuPro-Bold", size: 20))
+                Spacer()
+            }.padding(.bottom, 2)
+            
+            Text("Kamu berhasil mempelajari ")
+                .font(.custom("ApercuPro", size: 14))
+            
+            + Text("5")
+                .font(.custom("ApercuPro-Bold", size: 14))
+                .foregroundColor(.primColor)
+            
+            + Text(" kalimat")
+                .font(.custom("ApercuPro", size: 14))
+            
+            
+            HStack {
+                ZStack(alignment: .leading) {
+                    GeometryReader { geometry in
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.grayProgressColor ?? Color.gray.opacity(0.3))
+                            .frame(height: 16)
                         
-                        .frame(height: 16)
+                        Rectangle()
+                            .fill(Color.greenProgressColor ?? Color.green)
+                            .frame(width: geometry.size.width * progress, height: 16)
+                            .cornerRadius(progress == 1 ? 20 : 10)
+                            .animation(.easeInOut(duration: 0.3), value: progress)
                     }
                     
-                    
-                    Text("\(progress*100, specifier: "%.0f")%")
-                        .font(.custom("ApercuPro-Bold", size: 14))
-                        .foregroundColor(.primColor)
+                    .frame(height: 16)
                 }
                 
+                
+                Text("\(progress*100, specifier: "%.0f")%")
+                    .font(.custom("ApercuPro-Bold", size: 14))
+                    .foregroundColor(.primColor)
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white)
-                    .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
-            )
-            .padding(.bottom,24)
+            
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white)
+                .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
+        )
+        .padding(.bottom,24)
     }
 }
 

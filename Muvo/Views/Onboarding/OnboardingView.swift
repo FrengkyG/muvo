@@ -112,8 +112,8 @@ struct BottomBlueCardSection: View {
                 
                 ZStack {
                     HStack(spacing: 8) {
-                        Circle().fill(Color.white.opacity(0.5)).frame(width: 10, height: 10)
                         Circle().fill(Color.white).frame(width: 10, height: 10)
+                        Circle().fill(Color.white.opacity(0.5)).frame(width: 10, height: 10)
                     }
                     
                     HStack {

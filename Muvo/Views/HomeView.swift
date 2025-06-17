@@ -35,7 +35,6 @@ struct HomeView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: geometry.size.width * 0.75)
-                
                         .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                         .rotationEffect(.degrees(315))
                         .offset(x: -50)
@@ -76,6 +75,7 @@ struct HeaderView: View {
     
     var body: some View {
         HStack {
+            // TODO: Change to sun/moon image with logic 6AM, 6PM
             Rectangle()
                 .frame(width: 21, height: 21, alignment: .center)
                 .foregroundColor(.gray)
@@ -86,18 +86,104 @@ struct HeaderView: View {
                     .font(.custom("ApercuPro-Medium", size: 20))
             }
             Spacer()
-            Rectangle()
-                .frame(width: 36, height: 36, alignment: .center)
-                .foregroundColor(.gray)
         }
     }
 }
 
 struct CardBannerView: View {
+    @State private var selectedTopik = "Semua"
+    @State private var showDropdown = false
+    
+    @State private var progress: Double = 0.3
+    let topikList = ["Semua", "Hotel", "Bandara"]
+    
+    
     var body: some View {
-        Rectangle()
-            .frame(width: .infinity, height: 110, alignment: .center)
-        .foregroundColor(.gray)    }
+        ZStack {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text ("Progress Belajar")
+                        .font(.custom("ApercuPro-Bold", size: 20))
+                    Spacer()
+                }
+                HStack {
+                    Text("Topik:")
+                        .font(.custom("ApercuPro", size: 14))
+                    
+                    Button(action: {
+                        withAnimation {
+                            showDropdown.toggle()
+                        }
+                    }) {
+                        HStack(spacing: 2) {
+                            Text(selectedTopik)
+                                .font(.custom("ApercuPro-Bold", size: 16))
+                                .foregroundColor(.primColor)
+                            Image(systemName: "chevron.down")
+                                .font(.custom("ApercuPro-Bold", size: 14))
+                                .foregroundColor(.primColor)
+                        }
+                    }
+                    
+                    
+                }
+                
+                HStack {
+                    ZStack(alignment: .leading) {
+                        GeometryReader { geometry in
+                            RoundedRectangle(cornerRadius: 18)
+                                .fill(Color.grayProgressColor ?? Color.gray.opacity(0.3))
+                                .frame(height: 16)
+                            
+                            Rectangle()
+                                .fill(Color.greenProgressColor ?? Color.green)
+                                .frame(width: geometry.size.width * progress, height: 16)
+                                .cornerRadius(progress == 1 ? 20 : 10)
+                                .animation(.easeInOut(duration: 0.3), value: progress)
+                        }
+                        
+                        .frame(height: 16)
+                    }
+                    
+                    
+                    Text("\(progress*100, specifier: "%.0f")%")
+                        .font(.custom("ApercuPro-Bold", size: 14))
+                        .foregroundColor(.primColor)
+                }
+                
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white)
+                    .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
+            )
+            .padding(.bottom,24)
+        }
+        // TODO: FIX DROPDOWN
+        if showDropdown {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(topikList, id: \.self) { topik in
+                        Button(action: {
+                            selectedTopik = topik
+                            showDropdown = false
+                            
+                        }) {
+                            Text(topik)
+                                .foregroundColor(.black)
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 12)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+            .background(Color.white)
+            .cornerRadius(8)
+            .shadow(radius: 4)
+            .padding(.top, 4)
+            .zIndex(10)
+        }
+    }
 }
 
 struct WarmUpview: View {
@@ -138,6 +224,7 @@ struct WarmUpview: View {
             .padding(22)
             .frame(width: geometry.size.width*0.5)
             .glassmorphismCard()
+            .padding(.bottom, 24)
         }
         
         
@@ -146,9 +233,11 @@ struct WarmUpview: View {
 
 struct CategoryView: View{
     var body: some View{
-        Rectangle()
-            .frame(width: .infinity)
-            .foregroundColor(.gray)
+        VStack {
+            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .glassmorphismCard()
     }
 }
 

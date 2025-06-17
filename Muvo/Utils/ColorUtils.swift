@@ -10,6 +10,8 @@ extension Color {
     static let disabledText = Color(hex: "#797877")
     static let primColor = Color(hex: "#0B6FF9")
     static let bgButtonColor = Color(hex: "#F9F6F4")
+    static let greenProgressColor = Color(hex: "#00D34B")
+    static let grayProgressColor = Color(hex: "#D8D8D8")
 }
 
 extension Color {

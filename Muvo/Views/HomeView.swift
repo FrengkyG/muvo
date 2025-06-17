@@ -29,7 +29,6 @@ struct HomeView: View {
                 .frame(height: geometry.size.height * 0.5)
                 
                 
-                
                 ZStack(alignment: .center) {
                     Image("greenMascot")
                         .resizable()
@@ -99,34 +98,23 @@ struct CardBannerView: View {
     
     
     var body: some View {
-        ZStack {
             VStack(alignment: .leading) {
                 HStack {
                     Text ("Progress Belajar")
                         .font(.custom("ApercuPro-Bold", size: 20))
                     Spacer()
-                }
-                HStack {
-                    Text("Topik:")
-                        .font(.custom("ApercuPro", size: 14))
-                    
-                    Button(action: {
-                        withAnimation {
-                            showDropdown.toggle()
-                        }
-                    }) {
-                        HStack(spacing: 2) {
-                            Text(selectedTopik)
-                                .font(.custom("ApercuPro-Bold", size: 16))
-                                .foregroundColor(.primColor)
-                            Image(systemName: "chevron.down")
-                                .font(.custom("ApercuPro-Bold", size: 14))
-                                .foregroundColor(.primColor)
-                        }
-                    }
-                    
-                    
-                }
+                }.padding(.bottom, 2)
+                
+                Text("Kamu berhasil mempelajari ")
+                    .font(.custom("ApercuPro", size: 14))
+
+                + Text("5")
+                    .font(.custom("ApercuPro-Bold", size: 14))
+                    .foregroundColor(.primColor)
+                
+                + Text(" kalimat")
+                    .font(.custom("ApercuPro", size: 14))
+
                 
                 HStack {
                     ZStack(alignment: .leading) {
@@ -159,30 +147,6 @@ struct CardBannerView: View {
                     .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
             )
             .padding(.bottom,24)
-        }
-        // TODO: FIX DROPDOWN
-        if showDropdown {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(topikList, id: \.self) { topik in
-                        Button(action: {
-                            selectedTopik = topik
-                            showDropdown = false
-                            
-                        }) {
-                            Text(topik)
-                                .foregroundColor(.black)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }
-                }
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(radius: 4)
-            .padding(.top, 4)
-            .zIndex(10)
-        }
     }
 }
 
@@ -232,12 +196,28 @@ struct WarmUpview: View {
 }
 
 struct CategoryView: View{
+    
     var body: some View{
-        VStack {
-            
+        VStack(alignment: .leading) {
+            Text("Lagi pengen belajar apa hari ini?")
+                .font(.custom("ApercuPro-Bold", size: 16))
+                .padding(.bottom, 12)
+            SearchBarView()
+            HStack(spacing: 12) {
+                TopikCardView(title: "Hotel", imageName: "iconHotel") {
+                    print("Hotel tapped")
+                    // TODO: Add Navigation
+                }
+                TopikCardView(title: "Bandara", imageName: "iconAirport") {
+                    print("Bandara tapped")
+                    // TODO: Add Navigation
+                }
+            }
         }
+        .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .glassmorphismCard()
+        
     }
 }
 
@@ -309,5 +289,60 @@ struct LargeRadiusShape: Shape {
         path.closeSubpath()
         
         return path
+    }
+}
+
+struct SearchBarView: View {
+    @State private var searchText: String = ""
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.grayIcon)
+            
+            TextField("Tulis kata yang mau kamu pelajari...", text: $searchText)
+                .font(.custom("ApercuPro", size: 14))
+                .foregroundColor(.grayText)
+        }
+        .padding(.vertical, 9)
+        .padding(.horizontal, 8)
+        .background(Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 32)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
+        .cornerRadius(32)
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+        .padding(.bottom, 12)
+    }
+}
+
+struct TopikCardView: View {
+    let title: String
+    let imageName: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .center) {
+                Text(title)
+                    .font(.custom("ApercuPro-Bold", size: 36))
+                    .foregroundColor(.primColor)
+                    .padding(.top, 17)
+                
+                Spacer(minLength: 1)
+                
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                
+                
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.white80)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+        }
     }
 }

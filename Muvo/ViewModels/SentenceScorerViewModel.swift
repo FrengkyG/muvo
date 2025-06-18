@@ -21,7 +21,13 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     @Published var sentences: [PracticeSentence] = []
     @Published var lastResult: PronunciationResult?
     @Published var waveformSamples: [CGFloat] = []
-    @Published var currentSentenceFailureCount: Int = 0
+    @Published var currentGroup: Int = 1
+    
+    // --- Separate failure counters for internal logic ---
+    @Published private var currentAlmostFailureCount: Int = 0
+    @Published private var currentTryAgainFailureCount: Int = 0
+    
+    var audioPlayer: AVAudioPlayer?
 
     // MARK: - Services
     private let sentenceProvider = SentenceProvider()
@@ -31,11 +37,10 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         return service
     }()
     
-    // MARK: - Audio Player
-    private var audioPlayer: AVAudioPlayer?
-    
     // MARK: - State Management
-    private var sentenceFailureCounts: [Int: Int] = [:]
+    // --- Dictionaries to store separate failure counts for all sentences ---
+    private var sentenceAlmostFailureCounts: [Int: Int] = [:]
+    private var sentenceTryAgainFailureCounts: [Int: Int] = [:]
     
     var currentSentence: PracticeSentence {
         guard sentences.indices.contains(currentSentenceIndex) else {
@@ -43,11 +48,33 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         }
         return sentences[currentSentenceIndex]
     }
+    
+    /// A computed property that provides the correct failure count to the UI based on the last result.
+    var currentSentenceFailureCount: Int {
+        guard let lastAccuracy = lastResult?.accuracy else { return 0 }
+        
+        switch lastAccuracy {
+        case .almost:
+            return currentAlmostFailureCount
+        case .tryAgain:
+            return currentTryAgainFailureCount
+        case .perfect:
+            return 0
+        }
+    }
+    
+    /// A computed property to determine if the "skip" button should be shown based on separate failure counts.
+    var shouldShowSkipButton: Bool {
+        let canSkipOnAlmost = (currentAlmostFailureCount >= 3)
+        let canSkipOnTryAgain = (currentTryAgainFailureCount >= 2)
+        
+        return canSkipOnAlmost || canSkipOnTryAgain
+    }
 
     // MARK: - Initialization
     override init() {
         super.init()
-        self.sentences = sentenceProvider.getRandomizedSentences()
+        loadSentences(for: currentGroup)
         requestPermissions()
     }
 
@@ -60,7 +87,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         }
     }
     
-    /// Plays the audio for the current sentence.
     func playCurrentSentenceAudio() {
         guard let url = Bundle.main.url(forResource: currentSentence.audioFileName, withExtension: nil) else {
             print("Error: Audio file '\(currentSentence.audioFileName)' not found.")
@@ -68,7 +94,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         }
         
         do {
-            // Configure the audio session for playback
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
             
@@ -79,21 +104,22 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
             print("Error playing audio: \(error.localizedDescription)")
         }
     }
-
+    
     func nextSentence() {
         if currentSentenceIndex < sentences.count - 1 {
             currentSentenceIndex += 1
         } else {
-            sentences = sentenceProvider.getRandomizedSentences()
-            currentSentenceIndex = 0
-            sentenceFailureCounts.removeAll()
+            currentGroup = (currentGroup == 1) ? 2 : 1
+            loadSentences(for: currentGroup)
         }
-        updateCurrentSentenceFailureCount()
+        updateCurrentFailureCounts()
         resetForNewRecording()
     }
 
     func skipToNext() {
-        sentenceFailureCounts[currentSentenceIndex] = 0
+        // Reset counters for the sentence being skipped before moving on
+        sentenceAlmostFailureCounts[currentSentenceIndex] = 0
+        sentenceTryAgainFailureCounts[currentSentenceIndex] = 0
         nextSentence()
     }
 
@@ -105,8 +131,19 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         print("Feature: Showing word-by-word analysis...")
         resetForNewRecording()
     }
+    
+    // MARK: - Private Methods
+    
+    /// Loads the sentences for a specific group and resets all failure count states.
+    private func loadSentences(for group: Int) {
+        print("[INFO] Loading sentences for group \(group).")
+        self.sentences = sentenceProvider.getSentences(for: group)
+        self.currentSentenceIndex = 0
+        self.sentenceAlmostFailureCounts.removeAll()
+        self.sentenceTryAgainFailureCounts.removeAll()
+        updateCurrentFailureCounts()
+    }
 
-    // MARK: - Recording Flow
     private func startRecording() {
         state = .recording
         waveformSamples = []
@@ -119,11 +156,10 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         audioService.stopRecording()
     }
     
-    // MARK: - AudioProcessingServiceDelegate
     func didUpdateWaveform(samples: [CGFloat]) {
         self.waveformSamples.append(contentsOf: samples)
-        if self.waveformSamples.count > 1000 {
-            self.waveformSamples.removeFirst(self.waveformSamples.count - 50)
+        if self.waveformSamples.count > 100 {
+             self.waveformSamples.removeFirst(self.waveformSamples.count - 100)
         }
     }
     
@@ -139,6 +175,7 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
             finalAccuracy = .tryAgain
         }
         
+        // This must be called BEFORE the dispatch block to ensure the new counts are available for the computed property.
         updateFailureCount(for: finalAccuracy)
         
         DispatchQueue.main.async {
@@ -152,7 +189,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         }
     }
 
-    // MARK: - Scoring & State Helpers
     private func evaluatePronunciation(mlClassification: String?, recognizedText: String) -> PronunciationAccuracy {
         let normalizedTarget = normalizeText(currentSentence.english)
         let normalizedSTTResult = normalizeText(recognizedText)
@@ -162,7 +198,7 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         }
         
         let targetWordCount = normalizedTarget.components(separatedBy: " ").count
-        let matchingWordCount = countMatchingWords(recognized: normalizedSTTResult, target: normalizedTarget)
+        let matchingWordCount = countMatchingWords(recognized: normalizedSTTResult, target: recognizedText)
         if targetWordCount > 0 && Double(matchingWordCount) / Double(targetWordCount) >= 0.6 {
             return .almost
         }
@@ -180,17 +216,26 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         SFSpeechRecognizer.requestAuthorization { _ in }
     }
     
+    /// Updates the appropriate failure counter based on the result accuracy.
     private func updateFailureCount(for accuracy: PronunciationAccuracy) {
-        if accuracy == .perfect {
-            sentenceFailureCounts[currentSentenceIndex] = 0
-        } else {
-            sentenceFailureCounts[currentSentenceIndex, default: 0] += 1
+        switch accuracy {
+        case .perfect:
+            sentenceAlmostFailureCounts[currentSentenceIndex] = 0
+            sentenceTryAgainFailureCounts[currentSentenceIndex] = 0
+        case .almost:
+            sentenceAlmostFailureCounts[currentSentenceIndex, default: 0] += 1
+            sentenceTryAgainFailureCounts[currentSentenceIndex] = 0 // Reset other counter
+        case .tryAgain:
+            sentenceTryAgainFailureCounts[currentSentenceIndex, default: 0] += 1
+            sentenceAlmostFailureCounts[currentSentenceIndex] = 0 // Reset other counter
         }
-        updateCurrentSentenceFailureCount()
+        updateCurrentFailureCounts()
     }
     
-    private func updateCurrentSentenceFailureCount() {
-        currentSentenceFailureCount = sentenceFailureCounts[currentSentenceIndex] ?? 0
+    /// Updates the published properties for the current sentence's failure counts.
+    private func updateCurrentFailureCounts() {
+        currentAlmostFailureCount = sentenceAlmostFailureCounts[currentSentenceIndex] ?? 0
+        currentTryAgainFailureCount = sentenceTryAgainFailureCounts[currentSentenceIndex] ?? 0
     }
 
     private func normalizeText(_ text: String) -> String {

@@ -45,7 +45,10 @@ struct MainCardView: View {
                 .padding(.leading, 20)
 
                 HStack(spacing: 16) {
-                    Button(action: {}) {
+                    Button(action: {                                            viewModel.playCurrentSentenceAudio()
+
+                    })
+                    {
                         Image(systemName: "speaker.wave.2.fill")
                             .font(.title3)
                             .foregroundColor(.white)

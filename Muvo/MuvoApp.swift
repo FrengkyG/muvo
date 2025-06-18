@@ -13,7 +13,7 @@ struct MuvoApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreenView()
         }
         .modelContainer(Container.create(shouldCreateDefaults: &isFirstTimeLaunch))
     }

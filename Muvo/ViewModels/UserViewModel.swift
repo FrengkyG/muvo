@@ -17,7 +17,7 @@ class UserViewModel: ObservableObject {
     }
 
     init() {
-        self.username = UserDefaults.standard.string(forKey: Self.usernameKey) ?? ""
+        self.username = UserDefaults.standard.string(forKey: Self.usernameKey) ?? "Guest"
     }
 
     func saveUsername(_ name: String) {
@@ -25,6 +25,6 @@ class UserViewModel: ObservableObject {
     }
 
     func getUsername() -> String {
-        UserDefaults.standard.string(forKey: Self.usernameKey) ?? ""
+        UserDefaults.standard.string(forKey: Self.usernameKey) ?? "Guest"
     }
 }

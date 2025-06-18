@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct HomeView: View {
+struct Home2View: View {
     @StateObject var userViewModel = UserViewModel()
     @Environment(\.modelContext) private var context
     
@@ -16,29 +16,25 @@ struct HomeView: View {
     @Query var questions: [Question]
     
     var body: some View {
-        NavigationView{
-            VStack(spacing: 24) {
-                HStack {
-                    Text("Hello, \(userViewModel.username)")
-                    Spacer()
+        GeometryReader { geometry in
+            ZStack(alignment: .bottomTrailing) {
+                ZStack(alignment: .center) {
+                    Image("greenMascot")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: geometry.size.width * 0.75)
+                        .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+                        .rotationEffect(.degrees(315))
+                        .offset(x: -50)
+                    
+                    VStack {
+                        HeaderView(userViewModel: userViewModel)
+                        CardBannerView()
+                        WarmUpview(geometry: geometry)
+                        CategoryView()
+                    }.padding(.horizontal, 24)
                 }
-                
-                // Card
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(categories) { category in
-                        NavigationLink(destination: WordCheckView()) {
-                            progressCard(category: category)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Divider()
-                
-                Spacer()
             }
-            .padding()
         }
     }
     
@@ -59,5 +55,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }

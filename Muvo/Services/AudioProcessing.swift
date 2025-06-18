@@ -36,6 +36,7 @@ class AudioProcessingService: NSObject, SNResultsObserving {
     
     // Add recording state tracking
     private var isRecording = false
+    private var recognitionTimer: Timer?
 
     override init() {
         super.init()
@@ -75,7 +76,7 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             return
         }
         
-        recognitionRequest.shouldReportPartialResults = false
+        recognitionRequest.shouldReportPartialResults = true  // Changed to true for better debugging
         recognitionRequest.requiresOnDeviceRecognition = false
         recognitionRequest.taskHint = .dictation
 
@@ -84,6 +85,8 @@ class AudioProcessingService: NSObject, SNResultsObserving {
         
         if startAudioEngine(with: recognitionRequest) {
             isRecording = true
+            // Start a timer to handle potential timeout
+            startRecognitionTimer()
             print("[INFO] Recording started successfully.")
         } else {
             cleanup()
@@ -97,34 +100,37 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             return
         }
         
-        isRecording = false
+        // Cancel the timer
+        recognitionTimer?.invalidate()
+        recognitionTimer = nil
         
-        // Stop audio engine first
+        isRecording = false
+        print("[INFO] Stopping recording...")
+        
+        // Stop audio engine and remove tap
         if audioEngine.isRunning {
             audioEngine.stop()
         }
         
-        // Remove tap safely
         if audioEngine.inputNode.numberOfInputs > 0 {
             audioEngine.inputNode.removeTap(onBus: 0)
         }
         
-        // End recognition
+        // End audio input for recognition (but don't cancel the task yet)
         recognitionRequest?.endAudio()
-        recognitionTask?.cancel()
         
-        // Clean up audio session
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("[WARNING] Failed to deactivate audio session: \(error.localizedDescription)")
-        }
+        // Let the recognition task complete naturally
+        // Don't cancel it here - let it finish processing
         
-        print("[INFO] Recording stopped and cleaned up.")
+        print("[INFO] Recording stopped, waiting for recognition to complete...")
     }
     
     private func cleanup() {
         isRecording = false
+        
+        // Cancel timer
+        recognitionTimer?.invalidate()
+        recognitionTimer = nil
         
         if audioEngine.isRunning {
             audioEngine.stop()
@@ -142,6 +148,21 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
             print("[WARNING] Failed to cleanup audio session: \(error.localizedDescription)")
+        }
+    }
+    
+    private func performFinalCleanup() {
+        // Clean up recognition task
+        recognitionTask?.finish()
+        recognitionTask = nil
+        recognitionRequest = nil
+        
+        // Clean up audio session
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            print("[INFO] Audio session deactivated after recognition completion.")
+        } catch {
+            print("[WARNING] Failed to deactivate audio session: \(error.localizedDescription)")
         }
     }
     
@@ -248,6 +269,10 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             guard let self = self else { return }
             
             print("[DEBUG-STT] Recognition task handler invoked.")
+            
+            // Cancel timer on any result
+            self.recognitionTimer?.invalidate()
+            self.recognitionTimer = nil
 
             let isFinal = result?.isFinal ?? false
             
@@ -265,13 +290,20 @@ class AudioProcessingService: NSObject, SNResultsObserving {
                 print("[DEBUG-STT] Recognition is final.")
             }
             
+            // Show partial results for debugging
+            if let result = result {
+                print("[DEBUG-STT] Partial result: '\(result.bestTranscription.formattedString)' (isFinal: \(result.isFinal))")
+            }
+            
             if error != nil || isFinal {
                 let recognizedText = result?.bestTranscription.formattedString ?? ""
                 print("[DEBUG-STT] Final recognized text: '\(recognizedText)'")
                 
                 let bestClassification = self.getBestClassificationResult()
                 
-                // Don't call stopRecording here as it's already handled
+                // Clean up resources after recognition completes
+                self.performFinalCleanup()
+                
                 DispatchQueue.main.async {
                     if let error = error {
                         self.delegate?.didFinishProcessing(result: .error(error.localizedDescription), classification: bestClassification)
@@ -282,6 +314,39 @@ class AudioProcessingService: NSObject, SNResultsObserving {
                     }
                 }
             }
+        }
+    }
+    
+    private func startRecognitionTimer() {
+        recognitionTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { [weak self] _ in
+            print("[WARNING] Recognition timeout - forcing completion")
+            self?.handleRecognitionTimeout()
+        }
+    }
+    
+    private func handleRecognitionTimeout() {
+        guard isRecording else { return }
+        
+        print("[INFO] Handling recognition timeout")
+        
+        // Force stop everything
+        isRecording = false
+        
+        if audioEngine.isRunning {
+            audioEngine.stop()
+        }
+        
+        if audioEngine.inputNode.numberOfInputs > 0 {
+            audioEngine.inputNode.removeTap(onBus: 0)
+        }
+        
+        recognitionRequest?.endAudio()
+        recognitionTask?.cancel()
+        
+        performFinalCleanup()
+        
+        DispatchQueue.main.async {
+            self.delegate?.didFinishProcessing(result: .noSpeech, classification: nil)
         }
     }
     

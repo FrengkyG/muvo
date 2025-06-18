@@ -14,20 +14,16 @@ struct SignUpView: View {
     var body: some View {
         GeometryReader{ geometry in
             ZStack(alignment: .top) {
-                
                 VStack(spacing:0) {
                     NavigationToolbar()
-                    
                     ZStack(alignment: .top) {
                         SignUpCardSection(username: $username, geometry: geometry, userViewModel: userViewModel, OnboardingViewModel: onboardingViewModel)
                             .frame(maxHeight: .infinity, alignment: .bottom)
-                        
                         
                         Image("orangeMascot")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 320)
-                        
                     }
                     .frame(maxHeight: .infinity)
                 }

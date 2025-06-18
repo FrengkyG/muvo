@@ -46,7 +46,7 @@ struct CardBannerView: View {
                             .cornerRadius(progress == 1 ? 20 : 10)
                             .animation(.easeInOut(duration: 0.3), value: progress)
                     }
-                    
+
                     .frame(height: 16)
                 }
                 

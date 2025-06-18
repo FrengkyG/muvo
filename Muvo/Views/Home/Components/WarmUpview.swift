@@ -8,7 +8,7 @@ import SwiftUI
 
 struct WarmUpview: View {
     let geometry: GeometryProxy
-    @State private var navigateToSentenceScorer = false
+    @State private var navigateToPracticeView = false
 
     var body: some View {
         HStack{
@@ -35,7 +35,7 @@ struct WarmUpview: View {
                     .fixedSize(horizontal: false, vertical: true)
                 
                 Button(action: {
-                    navigateToSentenceScorer = true
+                    navigateToPracticeView = true
                 }) {
                     HStack {
                         Image(systemName: "play.fill")
@@ -51,8 +51,8 @@ struct WarmUpview: View {
                     .cornerRadius(24)
                 }
                 .padding(.top, 8)
-                .navigationDestination(isPresented: $navigateToSentenceScorer) {
-                    SentencePracticeView()
+                .navigationDestination(isPresented: $navigateToPracticeView) {
+                    OnboardingPracticeView()
                 }
             }
             .padding(22)

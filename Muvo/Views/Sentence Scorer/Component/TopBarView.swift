@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct TopBarView: View {
+    @Environment(\.dismiss) var dismiss
     let progress: Int
     let total: Int
 
     var body: some View {
         HStack(spacing: 16) {
-            Button(action: {}) {
+            Button(action: {
+                dismiss()
+            }) {
                 Image(systemName: "xmark")
                     .font(.subheadline)
                     .fontWeight(.bold)

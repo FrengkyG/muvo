@@ -32,9 +32,9 @@ struct SentencePracticeView: View {
 
                     VStack {
                         Spacer()
-
-                        MainCardView(sentence: viewModel.currentSentence)
-                        
+                        // Pass the viewModel to the MainCardView
+                        MainCardView(sentence: viewModel.currentSentence, viewModel: viewModel)
+                        Spacer()
                         Text(getInstructionText())
                             .font(.custom("ApercuPro", size: 16))
 
@@ -74,7 +74,8 @@ struct SentencePracticeView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .cornerRadius(12)
-                .foregroundColor(Color("light-blue"))
+                .interactiveDismissDisabled()
+                .ignoresSafeArea()
             }
         }
         .onChange(of: viewModel.state) {
@@ -97,7 +98,7 @@ struct SentencePracticeView: View {
     }
 }
 
-
+// MARK: - Preview Provider
 struct SentencePracticeView_Previews: PreviewProvider {
     static var previews: some View {
         SentencePracticeView()

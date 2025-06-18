@@ -34,7 +34,7 @@ struct SymmetricWaveformView: View {
 
                     var bottomPath = Path()
                     bottomPath.addRect(CGRect(x: xOffset, y: middleY, width: barWidth, height: barHeight))
-                    context.fill(bottomPath, with: .color(.red.opacity(0.7)))
+                    context.fill(bottomPath, with: .color(.blue.opacity(0.7)))
 
                     xOffset += barWidth + spacing
                 }

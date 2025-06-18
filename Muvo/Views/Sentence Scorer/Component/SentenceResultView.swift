@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct SentenceResultView: View {
-    let result: PronunciationResult
     @ObservedObject var viewModel: PronunciationViewModel
+    @Environment(\.dismiss) var dismiss
+    @Binding var navigateToWordCheck: Bool
+    
     let failureCount: Int
+    let result: PronunciationResult
 
     var body: some View {
-        VStack(spacing: 0) {
+        NavigationStack {
             // Main content area
             VStack(spacing: 24) {
                 Spacer()
@@ -87,7 +90,12 @@ struct SentenceResultView: View {
                                 .modifier(PrimaryButtonModifier())
                         }
                     } else {
-                        Button(action: { viewModel.showWordAnalysis() }) {
+                        Button(action: {
+                            dismiss()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                navigateToWordCheck = true
+                            }
+                        }) {
                             Text("Analisa per Kata")
                                 .modifier(SecondaryButtonModifier())
                         }

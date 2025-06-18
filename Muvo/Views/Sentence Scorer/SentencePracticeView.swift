@@ -14,6 +14,8 @@ import Accelerate
 
 struct SentencePracticeView: View {
     @StateObject private var viewModel = PronunciationViewModel()
+    @State private var showSheet = false
+    @State private var navigateToWordCheck = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -54,20 +56,28 @@ struct SentencePracticeView: View {
                 }
                 .padding(.horizontal, 24)
                 
+                NavigationLink(destination: WordCheckView(), isActive: $navigateToWordCheck) {
+                    EmptyView()
+                }
+                
             }
         }
-        .sheet(isPresented: .constant(viewModel.state == .result)) {
+        .sheet(isPresented: $showSheet) {
             if let result = viewModel.lastResult {
                 SentenceResultView(
-                    result: result,
                     viewModel: viewModel,
-                    failureCount: viewModel.currentSentenceFailureCount
+                    navigateToWordCheck: $navigateToWordCheck,
+                    failureCount: viewModel.currentSentenceFailureCount,
+                    result: result
                 )
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .cornerRadius(12)
                 .foregroundColor(Color("light-blue"))
             }
+        }
+        .onChange(of: viewModel.state) {
+            showSheet = (viewModel.state == .result)
         }
         .navigationBarBackButtonHidden(true)
     }

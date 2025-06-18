@@ -52,7 +52,7 @@ struct SentencePracticeView: View {
                     .padding(.top)
                     .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 4)
                 }
-                .padding(.horizontal, geometry.size.width * 0.07)
+                .padding(.horizontal, 24)
                 
             }
         }

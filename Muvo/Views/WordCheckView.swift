@@ -24,6 +24,7 @@ struct WordCheckView: View {
         .temporaryDirectory
         .appendingPathComponent("word_exports", isDirectory: true)
     @State private var isRecording = false
+    @State private var waveformSamples: [CGFloat] = []
     
     private var audioFileURL: URL { FileManager.default.temporaryDirectory.appendingPathComponent("recorded.m4a") }
     private let audioEngine = AVAudioEngine()
@@ -40,7 +41,8 @@ struct WordCheckView: View {
     let VGGISH_TARGET_SAMPLE_LENGTH: Int = 15600
     
     // Split sentences
-    private let sentence = "I'd like to check in please."
+    @State var sentence: String
+    @State var translation: String
     private var splittedSentence: [String] {
         sentence
             .lowercased()
@@ -49,15 +51,78 @@ struct WordCheckView: View {
     }
     
     var body: some View {
-        VStack(spacing: 30) {
+
+            VStack(spacing: 30) {
+                wordCheckContent()
+                    .padding(.top, 40)
+                
+                infoTabView()
+                
+//                Text(transcription)
+//                    .padding()
+//                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                if isRecording {
+                    SymmetricWaveformView(samples: waveformSamples) {
+                        stopRecording()
+                        isRecording = false
+                    }
+                    .padding(.bottom, 30)
+                } else {
+                    Button(action: {
+                        startRecording()
+                        isRecording = true
+                    }) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 80, height: 80)
+                                .shadow(color: Color.blue.opacity(0.5), radius: 10, x: 0, y: 10)
+                            
+                            Image(systemName: "mic.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .padding(.bottom, 40)
+                }
+//
+//                Button("Reset") {
+//                    wordConfidences.removeAll()
+//                    for key in wordConfidenceDict.keys {
+//                        wordConfidenceDict[key] = "-"
+//                    }
+//                }
+//                .foregroundColor(.red)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.white)
+            .cornerRadius(20)
+            .padding(.horizontal, 24)
+            .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 4)
+            .onAppear {
+                requestPermissions()
+                createExportFolderIfNeeded()
+            }
+            .onAppear {
+                for word in splittedSentence {
+                    wordConfidenceDict[word] = "-"
+                }
+            }
+    }
+    
+    func wordCheckContent() -> some View {
+        VStack(spacing: 2) {
             ForEach(chunked(splittedSentence, size: 3), id: \.self) { chunk in
-                HStack(spacing: 8) {
+                HStack(spacing: 2) {
                     ForEach(chunk, id: \.self) { word in
                         let isConfident = wordConfidenceDict[word] ?? "-"
                         Text(word)
-                            .font(.title)
-                            .bold()
-                            .padding(4)
+                            .font(.custom("ApercuPro-Bold", size: 20))
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 4)
                             .background(
                                 isConfident == "y" ? Color.green.opacity(0.6) :
                                     isConfident == "n" ? Color.red.opacity(0.6) :
@@ -68,44 +133,79 @@ struct WordCheckView: View {
                 }
             }
             
-            Text(transcription)
-                .padding()
-                .multilineTextAlignment(.center)
-            
-            Button(action: {
-                isRecording ? stopRecording() : startRecording()
-                isRecording.toggle()
-            }) {
-                Text(isRecording ? "Stop Recording" : "Start Recording")
-                    .font(.title2)
-                    .padding()
-                    .background(isRecording ? Color.red : Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            
-            Button("Reset") {
-                wordConfidences.removeAll()
-                for key in wordConfidenceDict.keys {
-                    wordConfidenceDict[key] = "-"
+            Text(translation)
+                .font(.custom("ApercuPro", size: 14))
+                .foregroundColor(.gray)
+                .padding(.top, 4)
+        }
+    }
+    
+    func infoTabView() -> some View {
+        VStack {
+            if wordConfidenceDict.values.allSatisfy({ $0 == "y" }) {
+                HStack(alignment: .top) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.title3)
+                        .foregroundColor(Color.greenProgressDarker)
+                    VStack(alignment: .leading) {
+                        Text("Good job!")
+                            .font(.custom("ApercuPro-Bold", size: 16))
+                            .foregroundColor(Color.greenProgressDarker)
+                        Text("Semuanya udah bagus. Yuk lanjutin latihan lain.")
+                            .font(.custom("ApercuPro", size: 12))
+                    }
+                    Spacer()
                 }
+                .padding(8)
+                .frame(minWidth: 320, maxWidth: 320)
+                .background(.gray.opacity(0.1))
+                .cornerRadius(8)
+            } else {
+                HStack(alignment: .top) {
+                    Image(systemName: "lightbulb.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                    VStack(alignment: .leading) {
+                        Text("Tips biar bagus!")
+                            .font(.custom("ApercuPro-Bold", size: 16))
+                            .foregroundColor(.blue)
+                        Text("Coba ngomong perlahan dengan jelas di tempat yang gak rame deh.")
+                            .font(.custom("ApercuPro", size: 12))
+                    }
+                    Spacer()
+                }
+                .padding(8)
+                .frame(minWidth: 320, maxWidth: 320)
+                .background(.gray.opacity(0.1))
+                .cornerRadius(8)
             }
-            .foregroundColor(.red)
-        }
-        .padding()
-        .onAppear {
-            requestPermissions()
-            createExportFolderIfNeeded()
-        }
-        .onAppear {
-            for word in splittedSentence {
-                wordConfidenceDict[word] = "-"
+            
+            if wordConfidenceDict.values.contains("n") {
+                HStack(alignment: .top) {
+                    Image(systemName: "info.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.deepYellow)
+                    VStack(alignment: .leading) {
+                        Text("Coba ulang kata yang masih merah")
+                            .font(.custom("ApercuPro-Bold", size: 16))
+                            .foregroundColor(.deepYellow)
+                        Text("Kamu bisa langsung coba ucapin kata yang masih merah loh.")
+                            .font(.custom("ApercuPro", size: 12))
+                    }
+                    Spacer()
+                }
+                .padding(8)
+                .frame(minWidth: 320, maxWidth: 320)
+                .background(.gray.opacity(0.1))
+                .cornerRadius(8)
             }
         }
+        .padding(.horizontal, 8)
     }
     
     func startRecording() {
         clearExportFolder()
+        waveformSamples.removeAll()
         
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.record, mode: .default)
@@ -124,8 +224,27 @@ struct WordCheckView: View {
         audioEngine.inputNode.installTap(onBus: 0, bufferSize: 1024, format: inputFormat) { buffer, _ in
             try? audioFileRef?.write(from: buffer)
             self.processBuffer(buffer)
+
+            let channelData = buffer.floatChannelData?[0]
+            let frameLength = Int(buffer.frameLength)
+            if let channelData = channelData {
+                var rms: Float = 0.0
+                for i in 0..<frameLength {
+                    rms += pow(channelData[i], 2)
+                }
+                rms = sqrt(rms / Float(frameLength))
+                
+                let normalized = min(max(CGFloat(rms) * 20, 0), 1)
+                
+                DispatchQueue.main.async {
+                    waveformSamples.append(normalized)
+                    if waveformSamples.count > 100 {
+                        waveformSamples.removeFirst()
+                    }
+                }
+            }
         }
-        
+
         audioEngine.prepare()
         try? audioEngine.start()
     }
@@ -363,7 +482,7 @@ struct WordCheckView: View {
                     evaluateWithBE7Model(audioURL: outputURL, targetText: normalized) { confidence in
                         // Atur hasil prediksi
                         DispatchQueue.main.async {
-                            let confidenceFlag = confidence >= 0.5 ? "y" : "n"
+                            let confidenceFlag = confidence != 0 ? "y" : "n"
                             wordConfidenceDict[normalized] = confidenceFlag
                         }
                         
@@ -434,5 +553,8 @@ struct WordCheckView: View {
 }
 
 #Preview {
-    WordCheckView()
+    WordCheckView(
+        sentence: "Hello World hallaware turnitin facebook and linkedin",
+        translation: "Hello World hallaware turnitin facebook and linkedin"
+    )
 }

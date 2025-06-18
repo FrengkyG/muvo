@@ -108,11 +108,12 @@ struct SentenceResultView: View {
                 HStack(spacing: 12) {
                     Button(action: {
                         dismiss()
+                        viewModel.tryAgain()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             navigateToWordCheck = true
                         }
                     }) {
-                        Text("Analisa per Kata")
+                        Text("Analisis per Kata")
                             .modifier(SecondaryButtonModifier())
                     }
                     

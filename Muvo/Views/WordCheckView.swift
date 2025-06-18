@@ -58,9 +58,9 @@ struct WordCheckView: View {
                 
                 infoTabView()
                 
-                Text(transcription)
-                    .padding()
-                    .multilineTextAlignment(.center)
+//                Text(transcription)
+//                    .padding()
+//                    .multilineTextAlignment(.center)
                 
                 Spacer()
                 

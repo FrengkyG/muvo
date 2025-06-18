@@ -56,7 +56,10 @@ struct SentencePracticeView: View {
                 }
                 .padding(.horizontal, 24)
                 
-                NavigationLink(destination: WordCheckView(), isActive: $navigateToWordCheck) {
+                NavigationLink(destination: WordCheckView(
+                                    sentence: viewModel.currentSentence.english,
+                                    translation: viewModel.currentSentence.indonesian
+                                ), isActive: $navigateToWordCheck) {
                     EmptyView()
                 }
                 

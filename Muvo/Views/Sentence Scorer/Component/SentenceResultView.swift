@@ -92,6 +92,7 @@ struct SentenceResultView: View {
                     } else {
                         Button(action: {
                             dismiss()
+                            viewModel.tryAgain()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 navigateToWordCheck = true
                             }

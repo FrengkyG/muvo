@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct TopBarView: View {
+    @Environment(\.dismiss) var dismiss
     let progress: Int
     let total: Int
 
     var body: some View {
         HStack(spacing: 16) {
-            Button(action: {}) {
+            Button(action: {
+                dismiss()
+            }) {
                 Image(systemName: "xmark")
                     .font(.subheadline)
                     .fontWeight(.bold)
@@ -27,18 +30,24 @@ struct TopBarView: View {
             HStack {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
-                        Capsule().foregroundColor(Color.gray.opacity(0.2))
+                        Capsule().foregroundColor(Color.grayProgressLighter)
                         Capsule()
                             .frame(width: geometry.size.width * (total > 0 ? CGFloat(progress) / CGFloat(total) : 0))
-                            .foregroundColor(.blue)
+                            .foregroundColor(.greenProgressDarker)
                     }
                 }
                 .frame(height: 12)
 
-                Text("\(progress)/\(total)")
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.blue)
+                Group {
+                    Text("\(progress)")
+                        .font(.custom("ApercuPro-Bold", size: 20))
+                        .foregroundColor(.primColor)
+                    +
+                    Text("/\(total)")
+                        .font(.custom("ApercuPro", size: 16))
+                        .foregroundColor(.black)
+                }
+                
             }
             .padding(.horizontal)
             .padding(.vertical, 10)
@@ -48,4 +57,8 @@ struct TopBarView: View {
         }
         .padding(.bottom, 8)
     }
+}
+
+#Preview {
+    SentencePracticeView()
 }

@@ -8,7 +8,8 @@ import SwiftUI
 
 struct WarmUpview: View {
     let geometry: GeometryProxy
-    
+    @State private var navigateToPracticeView = false
+
     var body: some View {
         HStack{
             Image("imgBubbleChat")
@@ -34,7 +35,7 @@ struct WarmUpview: View {
                     .fixedSize(horizontal: false, vertical: true)
                 
                 Button(action: {
-                    // TODO: Add Action
+                    navigateToPracticeView = true
                 }) {
                     HStack {
                         Image(systemName: "play.fill")
@@ -50,6 +51,9 @@ struct WarmUpview: View {
                     .cornerRadius(24)
                 }
                 .padding(.top, 8)
+                .navigationDestination(isPresented: $navigateToPracticeView) {
+                    OnboardingPracticeView()
+                }
             }
             .padding(22)
             .frame(width: geometry.size.width*0.5)

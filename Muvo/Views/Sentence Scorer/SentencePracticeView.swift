@@ -30,9 +30,9 @@ struct SentencePracticeView: View {
 
                     VStack {
                         Spacer()
-                        // Pass the viewModel to the MainCardView
-                        MainCardView(sentence: viewModel.currentSentence, viewModel: viewModel)
-                        Spacer()
+
+                        MainCardView(sentence: viewModel.currentSentence)
+                        
                         Text(getInstructionText())
                             .font(.custom("ApercuPro", size: 16))
 
@@ -52,8 +52,8 @@ struct SentencePracticeView: View {
                     .padding(.top)
                     .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 4)
                 }
-                .padding(.horizontal, geometry.size.width * 0.07)
-                .padding(.vertical)
+                .padding(.horizontal, 24)
+                
             }
         }
         .sheet(isPresented: .constant(viewModel.state == .result)) {
@@ -66,10 +66,10 @@ struct SentencePracticeView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .cornerRadius(12)
-                .interactiveDismissDisabled()
-                .ignoresSafeArea()
+                .foregroundColor(Color("light-blue"))
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     private func getInstructionText() -> String {
@@ -86,7 +86,7 @@ struct SentencePracticeView: View {
     }
 }
 
-// MARK: - Preview Provider
+
 struct SentencePracticeView_Previews: PreviewProvider {
     static var previews: some View {
         SentencePracticeView()

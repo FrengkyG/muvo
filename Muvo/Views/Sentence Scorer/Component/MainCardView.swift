@@ -19,10 +19,10 @@ struct MainCardView: View {
                     .foregroundColor(.yellow.opacity(0.5))
                     .position(x: geo.size.width / 1.8, y: geo.size.height * 0.4)
             }
-
+            
             VStack(alignment: .leading, spacing: 8) {
                 Spacer()
-
+                
                 HStack {
                     Text(sentence.category.rawValue)
                         .font(.custom("ApercuPro", size: 12))
@@ -35,18 +35,19 @@ struct MainCardView: View {
 //                        )
                     Spacer()
                 }
-                .padding(.bottom, 8)
 
-                Text("Yuk, intip kalimatnya!")
-                    .font(.custom("ApercuPro", size: 20))
-                Text("Tap speaker buat denger cara bacanya.")
-                    .font(.custom("ApercuPro", size: 14))
-                    .padding(.bottom, 20)
+                VStack(alignment: .leading) {
+                    Text("Yuk, intip kalimatnya!")
+                        .font(.custom("ApercuPro-Bold", size: 20))
+                    Text("Tap speaker buat denger cara bacanya.")
+                        .font(.custom("ApercuPro", size: 17))
+                }
+                .padding(.leading, 20)
 
-                HStack(alignment: .center, spacing: 16) {
+                HStack(spacing: 16) {
                     Button(action: {}) {
                         Image(systemName: "speaker.wave.2.fill")
-                            .font(.title)
+                            .font(.title3)
                             .foregroundColor(.white)
                             .padding()
                             .background(
@@ -55,22 +56,28 @@ struct MainCardView: View {
                                     .shadow(color: .orange.opacity(0.6), radius: 8, x: 0, y: 4)
                             )
                     }
-
-                    VStack(alignment: .leading, spacing: 12) {
+                    
+                    VStack(alignment: .leading, spacing: 6) {
                         Text(sentence.english)
                             .font(.custom("ApercuPro-Bold", size: 20))
                             .bold()
                         Text(sentence.indonesian)
-                            .font(.body)
+                            .font(.system(size: 14))
                             .foregroundColor(.secondary)
                     }
                 }
+                .frame(minWidth: 300, maxWidth: 300, alignment: .leading)
                 .padding(.vertical, 12)
                 .padding(.horizontal, 8)
                 .glassmorphismCard()
-
+                .padding()
+                
                 Spacer()
             }.padding(.top, 100)
         }
     }
+}
+
+#Preview {
+    SentencePracticeView()
 }

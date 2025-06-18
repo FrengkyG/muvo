@@ -11,10 +11,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		66F4E2992E00288500E9C484 /* Exceptions for "Muvo" folder in "Muvo" target */ = {
+		57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				"Preview Content/Preview Assets.xcassets",
 			);
 			target = 575889862DF7C5E200F7D2BE /* Muvo */;
 		};
@@ -24,7 +25,7 @@
 		575889892DF7C5E200F7D2BE /* Muvo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				66F4E2992E00288500E9C484 /* Exceptions for "Muvo" folder in "Muvo" target */,
+				57588A3F2DF7EEF700F7D2BE /* Exceptions for "Muvo" folder in "Muvo" target */,
 			);
 			path = Muvo;
 			sourceTree = "<group>";
@@ -265,11 +266,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Muvo/Preview Content\"";
-				DEVELOPMENT_TEAM = 6TQSZH3N3Q;
+				DEVELOPMENT_TEAM = Z6Z9XWD8J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_FILE = Muvo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -296,11 +296,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Muvo/Preview Content\"";
-				DEVELOPMENT_TEAM = 6TQSZH3N3Q;
+				DEVELOPMENT_TEAM = Z6Z9XWD8J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_FILE = Muvo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -9,16 +9,30 @@ import SwiftUI
 
 // Renamed to PronunciationResultView for consistency
 struct SentenceResultView: View {
-    let result: PronunciationResult
     @ObservedObject var viewModel: PronunciationViewModel
-    let failureCount: Int
+    @Environment(\.dismiss) var dismiss
+    @Binding var navigateToWordCheck: Bool
     
+    let failureCount: Int
+    let result: PronunciationResult
+  
     var body: some View {
-        GeometryReader { geo in // Use GeometryReader at the top level to get size
-            VStack(spacing: 0) {
-                // Main content area
-                VStack(spacing: 24) {
-                    VStack(spacing: 16) {
+        NavigationStack {
+            // Main content area
+            VStack(spacing: 24) {
+                Spacer()
+                VStack(spacing: 16) {
+                    ZStack {
+                        switch result.accuracy {
+                        case .perfect:
+                            Image("correctMascot")
+                        case .almost:
+                            Image("bothMascot(orange)")
+                        case .tryAgain:
+                            Image("wrongMascot")
+                        }}
+
+                    HStack(spacing: 8) {
                         ZStack {
                             
                             switch result.accuracy {
@@ -65,29 +79,68 @@ struct SentenceResultView: View {
                     
                     
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                Divider()
-                    .padding(.bottom, 24)
-                // Bottom section with buttons
-                VStack(spacing: 16) {
-//                    if !result.recognizedText.isEmpty {
-//                        //                        VStack(spacing: 8) {
-//                        //                            Text("Yang kami tangkap:")
-//                        //                                .font(.subheadline)
-//                        //                                .foregroundColor(.black.opacity(0.6))
-//                        //
-//                        //                            Text("\"\(result.recognizedText)\"")
-//                        //                                .font(.title3)
-//                        //                                .foregroundColor(.black.opacity(0.8))
-//                        //                                .fontWeight(.semibold)
-//                        //                                .multilineTextAlignment(.center)
-//                        //                                .padding(.horizontal, 20)
-//                        //                        }
-//                        //                        .padding(.top, 20)
-//                    }
-                    
-                    actionButtons
-                        .padding(.bottom, 30)
+
+                Text(getFeedbackMessage())
+                    .font(.body)
+                    .foregroundColor(.black.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
+
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(getBackgroundColor())
+
+            VStack(spacing: 16) {
+                if !result.recognizedText.isEmpty {
+                    VStack(spacing: 8) {
+                        Text("Yang kami tangkap:")
+                            .font(.subheadline)
+                            .foregroundColor(.black.opacity(0.6))
+
+                        Text(result.recognizedText)
+                            .font(.title3)
+                            .foregroundColor(.black.opacity(0.6))
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                    }
+                    .padding(.top, 20)
+                }
+
+                VStack(spacing: 12) {
+                    if result.accuracy == .perfect {
+                        Button(action: { viewModel.nextSentence() }) {
+                            Text("Lanjut!")
+                                .modifier(PrimaryButtonModifier())
+                        }
+                    } else if result.accuracy == .tryAgain && failureCount >= 3 {
+                        Button(action: { viewModel.skipToNext() }) {
+                            Text("Lanjut dulu deh~")
+                                .modifier(PrimaryButtonModifier())
+                        }
+                    } else {
+                        Button(action: {
+                            dismiss()
+                            viewModel.tryAgain()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                navigateToWordCheck = true
+                            }
+                        }) {
+                            Text("Analisa per Kata")
+                                .modifier(SecondaryButtonModifier())
+                        }
+                        Button(action: { viewModel.tryAgain() }) {
+                            Text("Coba lagi")
+                                .modifier(PrimaryButtonModifier())
+                        }
+                    }
+
+                    Text("Karena dicek otomatis, hasilnya bisa aja ngga selalu akurat.")
+                        .font(.caption)
+                        .foregroundColor(.black.opacity(0.5))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
                 }
                 .padding(.horizontal, 30)
             }

@@ -70,12 +70,10 @@ struct SentencePracticeView: View {
                     failureCount: viewModel.currentSentenceFailureCount,
                     result: result
                 )
-                .interactiveDismissDisabled(true)
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
-                .cornerRadius(12)
-                .interactiveDismissDisabled()
-                .ignoresSafeArea()
+                .presentationBackground(.clear)
+                              .interactiveDismissDisabled(true)
+                              .presentationDetents([.medium, .large])
+                              .presentationDragIndicator(.visible)
             }
         }
         .onChange(of: viewModel.state) {

@@ -23,3 +23,16 @@ struct ContentView: View {
     }
 }
 
+//struct ContentView: View {
+//    @StateObject private var viewModel = OnboardingViewModel()
+//    
+//    var body: some View {
+//        if viewModel.isOnboardingCompleted {
+//            SentencePracticeView()
+//        } else {
+//            SentencePracticeView()
+//
+//        }
+//
+//    }
+//}

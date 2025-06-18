@@ -12,9 +12,6 @@ import CoreML
 import SoundAnalysis
 import Accelerate
 
-
-
-/// Manages the state and coordinates the logic for the pronunciation practice feature.
 class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingServiceDelegate {
 
     // MARK: - Published Properties
@@ -34,12 +31,15 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         return service
     }()
     
+    // MARK: - Audio Player
+    private var audioPlayer: AVAudioPlayer?
+    
     // MARK: - State Management
     private var sentenceFailureCounts: [Int: Int] = [:]
     
     var currentSentence: PracticeSentence {
         guard sentences.indices.contains(currentSentenceIndex) else {
-            return PracticeSentence(english: "Loading...", indonesian: "...", category: .airport, modelName: "soundclafAIR")
+            return PracticeSentence(english: "Loading...", indonesian: "...", category: .airport, modelName: "soundclafAIR", audioFileName: "")
         }
         return sentences[currentSentenceIndex]
     }
@@ -57,6 +57,26 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
             startRecording()
         } else if state == .recording {
             stopRecording()
+        }
+    }
+    
+    /// Plays the audio for the current sentence.
+    func playCurrentSentenceAudio() {
+        guard let url = Bundle.main.url(forResource: currentSentence.audioFileName, withExtension: nil) else {
+            print("Error: Audio file '\(currentSentence.audioFileName)' not found.")
+            return
+        }
+        
+        do {
+            // Configure the audio session for playback
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+            print("Playing audio: \(currentSentence.audioFileName)")
+        } catch {
+            print("Error playing audio: \(error.localizedDescription)")
         }
     }
 
@@ -83,7 +103,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     
     func showWordAnalysis() {
         print("Feature: Showing word-by-word analysis...")
-        // Future implementation for word analysis would go here.
         resetForNewRecording()
     }
 
@@ -103,7 +122,7 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     // MARK: - AudioProcessingServiceDelegate
     func didUpdateWaveform(samples: [CGFloat]) {
         self.waveformSamples.append(contentsOf: samples)
-        if self.waveformSamples.count > 50 {
+        if self.waveformSamples.count > 1000 {
             self.waveformSamples.removeFirst(self.waveformSamples.count - 50)
         }
     }
@@ -157,12 +176,8 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     }
 
     private func requestPermissions() {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
-            if !granted { print("Microphone permission was denied.") }
-        }
-        SFSpeechRecognizer.requestAuthorization { status in
-            if status != .authorized { print("Speech recognition permission was denied.") }
-        }
+        AVAudioSession.sharedInstance().requestRecordPermission { _ in }
+        SFSpeechRecognizer.requestAuthorization { _ in }
     }
     
     private func updateFailureCount(for accuracy: PronunciationAccuracy) {

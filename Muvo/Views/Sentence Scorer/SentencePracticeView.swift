@@ -32,7 +32,7 @@ struct SentencePracticeView: View {
                         Spacer()
 
                         MainCardView(sentence: viewModel.currentSentence)
-                        Spacer()
+                        
                         Text(getInstructionText())
                             .font(.custom("ApercuPro", size: 16))
 
@@ -69,6 +69,7 @@ struct SentencePracticeView: View {
                 .foregroundColor(Color("light-blue"))
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     private func getInstructionText() -> String {

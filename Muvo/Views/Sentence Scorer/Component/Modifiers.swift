@@ -11,7 +11,7 @@ import SwiftUI
 struct PrimaryButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom("Apercu-Bold", size: 16))
+            .font(.custom("Apercu-Bold", size: 18))
             .fontWeight(.bold)
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
@@ -24,7 +24,7 @@ struct PrimaryButtonModifier: ViewModifier {
 struct SecondaryButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom("Apercu-Bold", size: 16))
+            .font(.custom("Apercu-Bold", size: 18))
             .fontWeight(.bold)
             .foregroundColor(Color("primaryblue"))
             .frame(maxWidth: .infinity)

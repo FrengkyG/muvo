@@ -76,7 +76,7 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             return
         }
         
-        recognitionRequest.shouldReportPartialResults = true  // Changed to true for better debugging
+        recognitionRequest.shouldReportPartialResults = false
         recognitionRequest.requiresOnDeviceRecognition = false
         recognitionRequest.taskHint = .dictation
 
@@ -85,8 +85,6 @@ class AudioProcessingService: NSObject, SNResultsObserving {
         
         if startAudioEngine(with: recognitionRequest) {
             isRecording = true
-            // Start a timer to handle potential timeout
-            startRecognitionTimer()
             print("[INFO] Recording started successfully.")
         } else {
             cleanup()
@@ -100,29 +98,30 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             return
         }
         
-        // Cancel the timer
-        recognitionTimer?.invalidate()
-        recognitionTimer = nil
-        
         isRecording = false
-        print("[INFO] Stopping recording...")
         
-        // Stop audio engine and remove tap
+        // Stop audio engine first
         if audioEngine.isRunning {
             audioEngine.stop()
         }
         
+        // Remove tap safely
         if audioEngine.inputNode.numberOfInputs > 0 {
             audioEngine.inputNode.removeTap(onBus: 0)
         }
         
-        // End audio input for recognition (but don't cancel the task yet)
+        // End recognition
         recognitionRequest?.endAudio()
+        recognitionTask?.cancel()
         
-        // Let the recognition task complete naturally
-        // Don't cancel it here - let it finish processing
+        // Clean up audio session
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("[WARNING] Failed to deactivate audio session: \(error.localizedDescription)")
+        }
         
-        print("[INFO] Recording stopped, waiting for recognition to complete...")
+        print("[INFO] Recording stopped and cleaned up.")
     }
     
     private func cleanup() {
@@ -148,21 +147,6 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
             print("[WARNING] Failed to cleanup audio session: \(error.localizedDescription)")
-        }
-    }
-    
-    private func performFinalCleanup() {
-        // Clean up recognition task
-        recognitionTask?.finish()
-        recognitionTask = nil
-        recognitionRequest = nil
-        
-        // Clean up audio session
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-            print("[INFO] Audio session deactivated after recognition completion.")
-        } catch {
-            print("[WARNING] Failed to deactivate audio session: \(error.localizedDescription)")
         }
     }
     
@@ -301,9 +285,7 @@ class AudioProcessingService: NSObject, SNResultsObserving {
                 
                 let bestClassification = self.getBestClassificationResult()
                 
-                // Clean up resources after recognition completes
-                self.performFinalCleanup()
-                
+                // Don't call stopRecording here as it's already handled
                 DispatchQueue.main.async {
                     if let error = error {
                         self.delegate?.didFinishProcessing(result: .error(error.localizedDescription), classification: bestClassification)

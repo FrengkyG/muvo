@@ -56,10 +56,10 @@ struct SentenceResultView: View {
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text(getResultTitle())
-                                .font(.custom("Apercu-Bold", size: 20))
+                                .font(.custom("ApercuPro-Bold", size: 20))
                                 .foregroundColor(getStatusColor())
                             Text(getFeedbackMessage())
-                                .font(.custom("Apercu-Pro", size: 13))
+                                .font(.custom("ApercuPro", size: 13))
                                 .foregroundColor(.black)
                                 .multilineTextAlignment(.leading)
                         }

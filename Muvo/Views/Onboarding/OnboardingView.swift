@@ -26,7 +26,7 @@ struct OnboardingView: View {
                                     navigateToHome = true
                                 }) {
                                     Text("Skip")
-                                        .font(.custom("Apercu-Bold", size: 16))
+                                        .font(.custom("ApercuPro-Bold", size: 16))
                                         .foregroundColor(.disabledText)
                                         .underline()
                                 }

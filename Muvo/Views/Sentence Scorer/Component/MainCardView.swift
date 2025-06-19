@@ -10,7 +10,7 @@ import SwiftUI
 struct MainCardView: View {
     let sentence: PracticeSentence
     @ObservedObject var viewModel: PronunciationViewModel // <-- ViewModel passed in
-
+    
     var body: some View {
         ZStack {
             GeometryReader { geo in
@@ -30,12 +30,9 @@ struct MainCardView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-//                        .background(
-//                            Capsule().fill(sentence.category == .airport ? Color.blue : Color.green)
-//                        )
                     Spacer()
                 }
-
+                
                 VStack(alignment: .leading) {
                     Text("Yuk, intip kalimatnya!")
                         .font(.custom("ApercuPro-Bold", size: 20))
@@ -43,10 +40,10 @@ struct MainCardView: View {
                         .font(.custom("ApercuPro", size: 17))
                 }
                 .padding(.leading, 20)
-
+                
                 HStack(spacing: 16) {
-                    Button(action: {                                            viewModel.playCurrentSentenceAudio()
-
+                    Button(action: {
+                        viewModel.playCurrentSentenceAudio()
                     })
                     {
                         Image(systemName: "speaker.wave.2.fill")

@@ -7,16 +7,21 @@
 import SwiftUI
 
 struct SearchBarView: View {
-    @State private var searchText: String = ""
+    @State private var goToSearch = false
     
     var body: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.grayIcon)
-            
-            TextField("Tulis kata yang mau kamu pelajari...", text: $searchText)
-                .font(.custom("ApercuPro", size: 14))
-                .foregroundColor(.grayText)
+        Button {
+            goToSearch = true
+        } label: {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.grayIcon)
+                
+                Text("Tulis kata yang mau kamu pelajari...")
+                    .font(.custom("ApercuPro", size: 14))
+                    .foregroundColor(.grayText)
+                Spacer()
+            }
         }
         .padding(.vertical, 9)
         .padding(.horizontal, 8)
@@ -28,6 +33,9 @@ struct SearchBarView: View {
         .cornerRadius(32)
         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
         .padding(.bottom, 12)
+        .navigationDestination(isPresented: $goToSearch) {
+            SearchView()
+        }
     }
 }
 

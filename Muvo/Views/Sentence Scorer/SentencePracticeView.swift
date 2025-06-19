@@ -32,7 +32,6 @@ struct SentencePracticeView: View {
 
                     VStack {
                         Spacer()
-                        // Pass the viewModel to the MainCardView
                         MainCardView(sentence: viewModel.currentSentence, viewModel: viewModel)
                         Spacer()
                         Text(getInstructionText())
@@ -99,7 +98,6 @@ struct SentencePracticeView: View {
     }
 }
 
-// MARK: - Preview Provider
 struct SentencePracticeView_Previews: PreviewProvider {
     static var previews: some View {
         SentencePracticeView()

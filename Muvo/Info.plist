@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>UIAppFonts</key>
-        <array>
-            <string>Apercu-Regular.otf</string>
-            <string>Apercu-Regular-Italic.otf</string>
-            <string>Apercu-Bold.otf</string>
-            <string>Apercu-Bold-Italic.otf</string>
-            <string>Apercu-Medium.otf</string>
-            <string>Apercu-Medium-Italic.otf</string>
-        </array>
-    </dict>
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Apercu-Regular.otf</string>
+		<string>Apercu-Regular-Italic.otf</string>
+		<string>Apercu-Bold.otf</string>
+		<string>Apercu-Bold-Italic.otf</string>
+		<string>Apercu-Medium.otf</string>
+		<string>Apercu-Medium-Italic.otf</string>
+	</array>
+</dict>
 </plist>

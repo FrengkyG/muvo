@@ -58,10 +58,6 @@ struct WordCheckView: View {
                 
                 infoTabView()
                 
-//                Text(transcription)
-//                    .padding()
-//                    .multilineTextAlignment(.center)
-                
                 Spacer()
                 
                 if isRecording {
@@ -88,14 +84,6 @@ struct WordCheckView: View {
                     }
                     .padding(.bottom, 40)
                 }
-//
-//                Button("Reset") {
-//                    wordConfidences.removeAll()
-//                    for key in wordConfidenceDict.keys {
-//                        wordConfidenceDict[key] = "-"
-//                    }
-//                }
-//                .foregroundColor(.red)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.white)
@@ -199,6 +187,19 @@ struct WordCheckView: View {
                 .background(.gray.opacity(0.1))
                 .cornerRadius(8)
             }
+            
+            HStack {
+                Spacer()
+                Button("Reset") {
+                    wordConfidences.removeAll()
+                    for key in wordConfidenceDict.keys {
+                        wordConfidenceDict[key] = "-"
+                    }
+                }
+                .foregroundColor(.red)
+                .font(.subheadline)
+            }
+            .padding(.trailing, 8)
         }
         .padding(.horizontal, 8)
     }
@@ -281,13 +282,29 @@ struct WordCheckView: View {
         }
         
         do {
-            let model = try BE7_3_1(configuration: MLModelConfiguration())
-            let output = try model.prediction(audioSamples: mlArray)
-            let predictedLabel = output.target
-            let confidence = output.targetProbability[predictedLabel] ?? 0.0
+            var predictedLabel = ""
+            var confidence = 0.0
+            
+            if (sentence == "I have a reservation under my name.") {
+                let model = try H1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                predictedLabel = output.target
+                confidence = output.targetProbability[predictedLabel] ?? 0.0
+            } else if (sentence == "My luggage is missing.") {
+                let model = try A1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                predictedLabel = output.target
+                confidence = output.targetProbability[predictedLabel] ?? 0.0
+            } else {
+                let model = try BE7_3_1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                predictedLabel = output.target
+                confidence = output.targetProbability[predictedLabel] ?? 0.0
+            }
+            
             print("processBuffer Prediction: Label '\(predictedLabel)', Confidence: \(String(format: "%.2f", confidence))")
         } catch {
-            print("Error: Cannot connect to model BE7 in processBuffer -- \(error)")
+            print("Error: Cannot connect to model in processBuffer -- \(error)")
         }
     }
     
@@ -372,21 +389,32 @@ struct WordCheckView: View {
         }
         
         do {
-            let model = try BE7_3_1(configuration: MLModelConfiguration())
-            let output = try model.prediction(audioSamples: mlArray)
-            
-            let probs = output.targetProbability
+            var probs: [String:Double]
             let targetLower = targetText.lowercased()
+            
+            if (sentence == "I have a reservation under my name.") {
+                let model = try H1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                probs = output.targetProbability
+            } else if (sentence == "My luggage is missing.") {
+                let model = try A1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                probs = output.targetProbability
+            } else {
+                let model = try BE7_3_1(configuration: MLModelConfiguration())
+                let output = try model.prediction(audioSamples: mlArray)
+                probs = output.targetProbability
+            }
             
             if let conf = probs[targetLower] {
                 completion(conf)
             } else {
-                print("⚠️ Kata '\(targetText)' (normalized: '\(targetLower)') tidak ditemukan di targetProbability model BE7. File: \(audioURL.lastPathComponent)")
+                print("⚠️ Kata '\(targetText)' (normalized: '\(targetLower)') tidak ditemukan di targetProbability model. File: \(audioURL.lastPathComponent)")
                 print("   Label yang tersedia di model: \(probs.keys.sorted().joined(separator: ", "))")
                 completion(0.0)
             }
         } catch {
-            print("Error: Failed to evaluate model BE7 for '\(targetText)' (\(audioURL.lastPathComponent)) -- \(error)")
+            print("Error: Failed to evaluate model for '\(targetText)' (\(audioURL.lastPathComponent)) -- \(error)")
             completion(0.0)
         }
     }
@@ -482,8 +510,10 @@ struct WordCheckView: View {
                     evaluateWithBE7Model(audioURL: outputURL, targetText: normalized) { confidence in
                         // Atur hasil prediksi
                         DispatchQueue.main.async {
-                            let confidenceFlag = confidence != 0 ? "y" : "n"
-                            wordConfidenceDict[normalized] = confidenceFlag
+                            let confidenceFlag = confidence > 0.5 ? "y" : "n"
+                            if (wordConfidenceDict[normalized] == "n" || wordConfidenceDict[normalized] == "-") {
+                                wordConfidenceDict[normalized] = confidenceFlag
+                            }
                         }
                         
                         print(word + " : " + String(confidence))

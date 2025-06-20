@@ -128,7 +128,7 @@ struct SentenceResultView: View {
             }
             
             Text("Karena dicek otomatis, hasilnya bisa aja ngga selalu akurat.")
-                .font(.custom("Apercu-Pro", size: 11))
+                .font(.custom("ApercuPro", size: 11))
                 .foregroundColor(.black.opacity(0.5))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)

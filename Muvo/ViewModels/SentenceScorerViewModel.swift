@@ -22,8 +22,7 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     @Published var lastResult: PronunciationResult?
     @Published var waveformSamples: [CGFloat] = []
     @Published var currentGroup: Int = 1
-    
-    // --- Separate failure counters for internal logic ---
+    @Published var isPracticeComplete: Bool = false
     @Published private var currentAlmostFailureCount: Int = 0
     @Published private var currentTryAgainFailureCount: Int = 0
     
@@ -38,7 +37,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     }()
     
     // MARK: - State Management
-    // --- Dictionaries to store separate failure counts for all sentences ---
     private var sentenceAlmostFailureCounts: [Int: Int] = [:]
     private var sentenceTryAgainFailureCounts: [Int: Int] = [:]
     
@@ -49,7 +47,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         return sentences[currentSentenceIndex]
     }
     
-    /// A computed property that provides the correct failure count to the UI based on the last result.
     var currentSentenceFailureCount: Int {
         guard let lastAccuracy = lastResult?.accuracy else { return 0 }
         
@@ -62,23 +59,19 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
             return 0
         }
     }
-    
-    /// A computed property to determine if the "skip" button should be shown based on separate failure counts.
-    var shouldShowSkipButton: Bool {
+        var shouldShowSkipButton: Bool {
         let canSkipOnAlmost = (currentAlmostFailureCount >= 3)
         let canSkipOnTryAgain = (currentTryAgainFailureCount >= 2)
         
         return canSkipOnAlmost || canSkipOnTryAgain
     }
 
-    // MARK: - Initialization
     override init() {
         super.init()
         loadSentences(for: currentGroup)
         requestPermissions()
     }
 
-    // MARK: - Public User Actions
     func handleRecordingAction() {
         if state == .idle {
             startRecording()
@@ -117,7 +110,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
     }
 
     func skipToNext() {
-        // Reset counters for the sentence being skipped before moving on
         sentenceAlmostFailureCounts[currentSentenceIndex] = 0
         sentenceTryAgainFailureCounts[currentSentenceIndex] = 0
         nextSentence()
@@ -175,7 +167,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
             finalAccuracy = .tryAgain
         }
         
-        // This must be called BEFORE the dispatch block to ensure the new counts are available for the computed property.
         updateFailureCount(for: finalAccuracy)
         
         DispatchQueue.main.async {
@@ -216,7 +207,6 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         SFSpeechRecognizer.requestAuthorization { _ in }
     }
     
-    /// Updates the appropriate failure counter based on the result accuracy.
     private func updateFailureCount(for accuracy: PronunciationAccuracy) {
         switch accuracy {
         case .perfect:
@@ -259,4 +249,13 @@ class PronunciationViewModel: NSObject, ObservableObject, AudioProcessingService
         case .tryAgain: return 0
         }
     }
-}
+    func advanceToNextSentence() {
+            if currentSentenceIndex < sentences.count - 1 {
+                currentSentenceIndex += 1
+                state = .idle
+            } else {
+                isPracticeComplete = true
+            }
+        }
+    }
+    

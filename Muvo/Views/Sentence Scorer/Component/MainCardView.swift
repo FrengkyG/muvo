@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainCardView: View {
     let sentence: PracticeSentence
-    @ObservedObject var viewModel: PronunciationViewModel // <-- ViewModel passed in
+    @ObservedObject var viewModel: PronunciationViewModel
     
     var body: some View {
         ZStack {

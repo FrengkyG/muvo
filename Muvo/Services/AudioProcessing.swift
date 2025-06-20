@@ -33,8 +33,6 @@ class AudioProcessingService: NSObject, SNResultsObserving {
     
     private var classificationResults: [String] = []
     private let confidenceThreshold: Double = 0.3
-    
-    // Add recording state tracking
     private var isRecording = false
     private var recognitionTimer: Timer?
 
@@ -50,13 +48,11 @@ class AudioProcessingService: NSObject, SNResultsObserving {
     }
 
     func startRecording(for category: PracticeCategory) {
-        // Prevent multiple simultaneous recordings
         guard !isRecording else {
             print("[WARNING] Already recording, ignoring start request.")
             return
         }
         
-        // Check permissions first
         guard checkPermissions() else {
             delegate?.didFinishProcessing(result: .error("Permissions not granted"), classification: nil)
             return
@@ -99,36 +95,25 @@ class AudioProcessingService: NSObject, SNResultsObserving {
             print("[WARNING] Not currently recording, ignoring stop request.")
             return
         }
-        
-        // Cancel the timer
         recognitionTimer?.invalidate()
         recognitionTimer = nil
         
         isRecording = false
         print("[INFO] Stopping recording...")
-        
-        // Stop audio engine and remove tap
-        if audioEngine.isRunning {
+                if audioEngine.isRunning {
             audioEngine.stop()
         }
         
         if audioEngine.inputNode.numberOfInputs > 0 {
             audioEngine.inputNode.removeTap(onBus: 0)
         }
-        
-        // End audio input for recognition (but don't cancel the task yet)
-        recognitionRequest?.endAudio()
-        
-        // Let the recognition task complete naturally
-        // Don't cancel it here - let it finish processing
+                recognitionRequest?.endAudio()
         
         print("[INFO] Recording stopped, waiting for recognition to complete...")
     }
     
     private func cleanup() {
         isRecording = false
-        
-        // Cancel timer
         recognitionTimer?.invalidate()
         recognitionTimer = nil
         
@@ -152,7 +137,6 @@ class AudioProcessingService: NSObject, SNResultsObserving {
     }
     
     private func performFinalCleanup() {
-        // Clean up recognition task
         recognitionTask?.finish()
         recognitionTask = nil
         recognitionRequest = nil
@@ -167,21 +151,17 @@ class AudioProcessingService: NSObject, SNResultsObserving {
     }
     
     private func checkPermissions() -> Bool {
-        // Check microphone permission
         let micPermission = AVAudioSession.sharedInstance().recordPermission
         guard micPermission == .granted else {
             print("[ERROR] Microphone permission not granted: \(micPermission)")
             return false
         }
-        
-        // Check speech recognition permission
         let speechPermission = SFSpeechRecognizer.authorizationStatus()
         guard speechPermission == .authorized else {
             print("[ERROR] Speech recognition permission not granted: \(speechPermission)")
             return false
         }
         
-        // Check if speech recognizer is available
         guard let speechRecognizer = speechRecognizer, speechRecognizer.isAvailable else {
             print("[ERROR] Speech recognizer not available")
             return false
